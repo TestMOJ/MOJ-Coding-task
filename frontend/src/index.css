@@ -1,0 +1,290 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* GDS Design System Variables */
+:root {
+  /* GDS Colors */
+  --gds-blue: #1d70b8;
+  --gds-dark-blue: #003078;
+  --gds-light-blue: #5694ca;
+  --gds-green: #00703c;
+  --gds-red: #d4351c;
+  --gds-yellow: #ffdd00;
+  --gds-black: #0b0c0c;
+  --gds-dark-grey: #505a5f;
+  --gds-mid-grey: #b1b4b6;
+  --gds-light-grey: #f3f2f1;
+  --gds-white: #ffffff;
+  
+  /* GDS Typography scale */
+  --gds-font-family: arial, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-gds-light-grey text-gds-black;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    line-height: 1.25;
+  }
+}
+
+@layer components {
+  /* GDS Page Layout */
+  .govuk-width-container {
+    @apply max-w-[960px] mx-auto px-4;
+  }
+  
+  /* GDS Typography */
+  .govuk-heading-xl {
+    @apply text-4xl md:text-5xl font-bold mb-6 text-gds-black;
+  }
+  
+  .govuk-heading-l {
+    @apply text-3xl md:text-4xl font-bold mb-6 text-gds-black;
+  }
+  
+  .govuk-heading-m {
+    @apply text-2xl font-bold mb-4 text-gds-black;
+  }
+  
+  .govuk-heading-s {
+    @apply text-xl font-bold mb-3 text-gds-black;
+  }
+  
+  .govuk-body-l {
+    @apply text-lg text-gds-black mb-5;
+  }
+  
+  .govuk-body {
+    @apply text-base text-gds-black mb-5;
+  }
+  
+  .govuk-caption-xl {
+    @apply text-xl text-gds-dark-grey mb-2;
+  }
+  
+  /* GDS Buttons */
+  .govuk-button {
+    @apply inline-block px-5 py-3 font-bold text-base leading-none;
+    @apply bg-gds-green text-white border-2 border-transparent rounded-none;
+    @apply shadow-[0_2px_0_0_rgb(0,77,24)] cursor-pointer;
+    @apply hover:bg-[#00592e] active:shadow-none active:translate-y-[2px];
+    @apply focus:outline-none focus:ring-4 focus:ring-yellow-500 focus:ring-offset-0;
+    transition: none;
+  }
+  
+  .govuk-button--secondary {
+    @apply bg-gds-light-grey text-gds-black;
+    @apply shadow-[0_2px_0_0_rgb(11,12,12)] hover:bg-gds-mid-grey;
+  }
+  
+  .govuk-button--warning {
+    @apply bg-gds-red text-white;
+    @apply shadow-[0_2px_0_0_rgb(153,27,12)] hover:bg-[#aa2a16];
+  }
+  
+  .govuk-button--start {
+    @apply text-lg py-4 px-6;
+  }
+  
+  /* GDS Form Elements */
+  .govuk-input {
+    @apply w-full px-2 py-1 border-2 border-gds-black rounded-none;
+    @apply focus:outline-none focus:ring-0 focus:border-gds-yellow focus:shadow-[inset_0_0_0_2px];
+    font-size: 19px;
+    line-height: 1.25;
+  }
+  
+  .govuk-textarea {
+    @apply w-full px-2 py-1 border-2 border-gds-black rounded-none;
+    @apply focus:outline-none focus:ring-0 focus:border-gds-yellow focus:shadow-[inset_0_0_0_2px];
+    font-size: 19px;
+    line-height: 1.25;
+  }
+  
+  .govuk-select {
+    @apply w-full px-2 py-1 border-2 border-gds-black rounded-none bg-white;
+    @apply focus:outline-none focus:ring-0 focus:border-gds-yellow focus:shadow-[inset_0_0_0_2px];
+    font-size: 19px;
+    line-height: 1.25;
+  }
+  
+  .govuk-label {
+    @apply block font-bold mb-2 text-gds-black;
+    font-size: 19px;
+  }
+  
+  .govuk-hint {
+    @apply block text-gds-dark-grey mb-2;
+    font-size: 16px;
+  }
+  
+  /* GDS Form Group */
+  .govuk-form-group {
+    @apply mb-6;
+  }
+  
+  .govuk-form-group--error .govuk-input,
+  .govuk-form-group--error .govuk-textarea,
+  .govuk-form-group--error .govuk-select {
+    @apply border-gds-red border-4;
+  }
+  
+  /* GDS Error Messages */
+  .govuk-error-message {
+    @apply text-gds-red font-bold mb-2;
+    font-size: 19px;
+  }
+  
+  .govuk-error-message::before {
+    content: "! ";
+    @apply inline-block mr-1;
+  }
+  
+  /* GDS Panels */
+  .govuk-panel {
+    @apply bg-gds-blue text-white p-8 mb-8 text-center;
+  }
+  
+  .govuk-panel--confirmation {
+    @apply bg-gds-green;
+  }
+  
+  /* GDS Notification Banners */
+  .govuk-notification-banner {
+    @apply border-4 border-gds-black mb-8 p-6;
+  }
+  
+  .govuk-notification-banner--success {
+    @apply border-gds-green bg-[#00703c]/10;
+  }
+  
+  .govuk-notification-banner--error {
+    @apply border-gds-red bg-[#d4351c]/10;
+  }
+  
+  /* GDS Summary Cards */
+  .govuk-summary-card {
+    @apply border border-gds-mid-grey bg-white mb-6;
+  }
+  
+  .govuk-summary-card__title-wrapper {
+    @apply bg-gds-light-grey p-4 border-b border-gds-mid-grey;
+  }
+  
+  .govuk-summary-card__content {
+    @apply p-4;
+  }
+  
+  /* GDS Tags */
+  .govuk-tag {
+    @apply inline-block px-2 py-1 text-sm font-bold text-white;
+    @apply bg-gds-blue;
+  }
+  
+  .govuk-tag--grey {
+    @apply bg-gds-dark-grey;
+  }
+  
+  .govuk-tag--green {
+    @apply bg-gds-green;
+  }
+  
+  .govuk-tag--red {
+    @apply bg-gds-red;
+  }
+  
+  .govuk-tag--yellow {
+    @apply bg-gds-yellow text-gds-black;
+  }
+  
+  /* GDS Phase Banner */
+  .govuk-phase-banner {
+    @apply border-b border-gds-mid-grey py-2 mb-4;
+  }
+  
+  .govuk-phase-banner__content {
+    @apply flex items-center;
+  }
+  
+  .govuk-phase-banner__tag {
+    @apply bg-gds-blue text-white px-2 py-1 text-sm font-bold mr-2;
+  }
+  
+  /* GDS Back Link */
+  .govuk-back-link {
+    @apply inline-block text-gds-black mb-4 no-underline;
+    @apply hover:underline focus:outline-none focus:bg-gds-yellow focus:text-gds-black;
+  }
+  
+  /* GDS Section Break */
+  .govuk-section-break {
+    @apply my-8 border-0;
+  }
+  
+  .govuk-section-break--xl {
+    @apply my-12;
+  }
+  
+  .govuk-section-break--visible {
+    @apply border-b border-gds-mid-grey;
+  }
+  
+  /* GDS Tables */
+  .govuk-table {
+    @apply w-full border-collapse mb-6;
+  }
+  
+  .govuk-table__head {
+    @apply border-b-2 border-gds-black;
+  }
+  
+  .govuk-table__header {
+    @apply text-left p-2 font-bold;
+  }
+  
+  .govuk-table__body {
+  }
+  
+  .govuk-table__row {
+    @apply border-b border-gds-mid-grey;
+  }
+  
+  .govuk-table__cell {
+    @apply p-2;
+  }
+  
+  /* GDS Inset Text */
+  .govuk-inset-text {
+    @apply border-l-4 border-gds-mid-grey pl-4 py-2 my-4;
+  }
+  
+  /* GDS Warning Text */
+  .govuk-warning-text {
+    @apply relative pl-10 py-2;
+  }
+  
+  .govuk-warning-text__icon {
+    @apply absolute left-0 top-0 font-bold;
+  }
+  
+  .govuk-warning-text__text {
+    @apply font-bold;
+  }
+}
+
+@layer utilities {
+  .govuk-visually-hidden {
+    @apply absolute w-px h-px p-0 -m-px overflow-hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+}

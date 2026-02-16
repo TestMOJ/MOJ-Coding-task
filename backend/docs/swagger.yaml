@@ -1,0 +1,365 @@
+openapi: 3.0.0
+info:
+  title: HMCTS Task Management API
+  description: API for managing caseworker tasks in the HMCTS system
+  version: 1.0.0
+  contact:
+    name: HMCTS Development Team
+
+servers:
+  - url: http://localhost:3001/api
+    description: Development server
+
+tags:
+  - name: Tasks
+    description: Task management operations
+
+paths:
+  /tasks:
+    post:
+      tags:
+        - Tasks
+      summary: Create a new task
+      description: Creates a new task with the specified details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskInput'
+            examples:
+              fullTask:
+                summary: Task with all fields
+                value:
+                  title: Review case file
+                  description: Review and process case #12345
+                  status: To Do
+                  due_date: "2024-12-31T23:59:59Z"
+              minimalTask:
+                summary: Task with required fields only
+                value:
+                  title: Urgent hearing
+                  status: In Progress
+                  due_date: "2024-12-25T10:00:00Z"
+      responses:
+        '201':
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Task created successfully
+                  task:
+                    $ref: '#/components/schemas/Task'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    get:
+      tags:
+        - Tasks
+      summary: Retrieve all tasks
+      description: Retrieve all tasks with optional filtering and sorting
+      parameters:
+        - name: status
+          in: query
+          description: Filter tasks by status
+          required: false
+          schema:
+            type: string
+            enum: [To Do, In Progress, Completed]
+        - name: sort
+          in: query
+          description: Field to sort by
+          required: false
+          schema:
+            type: string
+            enum: [id, title, status, due_date, created_at]
+            default: due_date
+        - name: order
+          in: query
+          description: Sort order
+          required: false
+          schema:
+            type: string
+            enum: [ASC, DESC]
+            default: ASC
+      responses:
+        '200':
+          description: Tasks retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    example: 3
+                  tasks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Task'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /tasks/{id}:
+    get:
+      tags:
+        - Tasks
+      summary: Retrieve a task by ID
+      description: Get details of a specific task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Task ID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Task retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  task:
+                    $ref: '#/components/schemas/Task'
+        '400':
+          $ref: '#/components/responses/InvalidIdError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    put:
+      tags:
+        - Tasks
+      summary: Update a task
+      description: Update one or more fields of an existing task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Task ID
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskUpdate'
+            examples:
+              statusUpdate:
+                summary: Update status only
+                value:
+                  status: Completed
+              fullUpdate:
+                summary: Update multiple fields
+                value:
+                  title: Updated task title
+                  description: Updated description
+                  status: In Progress
+                  due_date: "2025-01-15T12:00:00Z"
+      responses:
+        '200':
+          description: Task updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Task updated successfully
+                  task:
+                    $ref: '#/components/schemas/Task'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    delete:
+      tags:
+        - Tasks
+      summary: Delete a task
+      description: Permanently delete a task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Task ID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Task deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Task deleted successfully
+                  deletedTask:
+                    $ref: '#/components/schemas/Task'
+        '400':
+          $ref: '#/components/responses/InvalidIdError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+components:
+  schemas:
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique task identifier
+          example: 1
+        title:
+          type: string
+          description: Task title
+          example: Review case file
+        description:
+          type: string
+          nullable: true
+          description: Detailed task description
+          example: Review and process case #12345
+        status:
+          type: string
+          enum: [To Do, In Progress, Completed]
+          description: Current task status
+          example: To Do
+        due_date:
+          type: string
+          format: date-time
+          description: Task due date in ISO 8601 format
+          example: "2024-12-31T23:59:59Z"
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when task was created
+          example: "2024-02-16T10:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when task was last updated
+          example: "2024-02-16T10:30:00Z"
+
+    TaskInput:
+      type: object
+      required:
+        - title
+        - status
+        - due_date
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Task title
+          example: Review case file
+        description:
+          type: string
+          maxLength: 1000
+          description: Detailed task description (optional)
+          example: Review and process case #12345
+        status:
+          type: string
+          enum: [To Do, In Progress, Completed]
+          description: Task status
+          example: To Do
+        due_date:
+          type: string
+          format: date-time
+          description: Task due date in ISO 8601 format
+          example: "2024-12-31T23:59:59Z"
+
+    TaskUpdate:
+      type: object
+      minProperties: 1
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Task title
+        description:
+          type: string
+          maxLength: 1000
+          description: Task description
+        status:
+          type: string
+          enum: [To Do, In Progress, Completed]
+          description: Task status
+        due_date:
+          type: string
+          format: date-time
+          description: Task due date in ISO 8601 format
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+
+    ValidationError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Validation failed
+        details:
+          type: array
+          items:
+            type: string
+          example: ["Title is required", "Status must be one of: To Do, In Progress, Completed"]
+
+  responses:
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+
+    NotFoundError:
+      description: Task not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Task not found
+
+    InvalidIdError:
+      description: Invalid task ID
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Invalid task ID
+
+    ServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Failed to process request
